@@ -3,16 +3,16 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-  <display-name>Basic Servlet App</display-name>
+  <display-name>Social Login App</display-name>
 
   <servlet>
-    <servlet-name>BasicServlet</servlet-name>
-    <servlet-class>com.servlet.BasicServlet</servlet-class>
+    <servlet-name>OauthServlet</servlet-name>
+    <servlet-class>com.servlet.OauthServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>BasicServlet</servlet-name>
-    <url-pattern>/hello</url-pattern>
+    <servlet-name>OauthServlet</servlet-name>
+    <url-pattern>/login</url-pattern>
   </servlet-mapping>
 </web-app>
