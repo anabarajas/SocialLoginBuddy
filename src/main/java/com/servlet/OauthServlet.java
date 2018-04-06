@@ -1,5 +1,7 @@
 package com.servlet;
 
+import com.oauth.AuthenticationRequest;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +13,9 @@ public class OauthServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.getWriter().println("Hello Ana (you are a boss)!!");
+        AuthenticationRequest oauthRequest = new AuthenticationRequest();
+        oauthRequest.createAuthorizationURI(request,response);
+      //  response.getWriter().println("Hello Ana (you are a boss)!!");
     }
 
     @Override
