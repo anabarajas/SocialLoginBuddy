@@ -9,7 +9,7 @@ import java.io.IOException;
 public class BasicServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest reqest, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.getWriter().println("Hello Ana (you are a boss)!!");
     }
