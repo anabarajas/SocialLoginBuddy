@@ -2,10 +2,10 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.coopApp</groupId>
-  <artifactId>BasicTomcatServlet</artifactId>
+  <artifactId>SocialLoginBuddy</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>Basic Tomcat Servlet Maven Webapp</name>
+  <name>Social Login Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
@@ -22,7 +22,7 @@
     </dependency>
   </dependencies>
   <build>
-    <finalName>BasicServletApp</finalName>
+    <finalName>SocialLoginBuddy</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.tomcat.maven</groupId>
