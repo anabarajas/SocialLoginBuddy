@@ -12,7 +12,7 @@ public class RedirectionServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String output = "";
+        String userInformationJSONstring = "";
         if (request.getQueryString() == null) {
             // TODO: handle error properly
             System.out.println("RedirectionServlet:: null redirection URI from service provider");
@@ -29,12 +29,12 @@ public class RedirectionServlet extends HttpServlet {
                 String accessToken = socialLoginServiceManager.getAccessToken(authorizationCode);
                 // Get user info
                 if (accessToken != null || !accessToken.equals("")) {
-                    socialLoginServiceManager.getUserInfo(accessToken);
+                    userInformationJSONstring = socialLoginServiceManager.getUserInfo(accessToken);
                 }
             }
 
         }
-        response.getWriter().println(output);
+        response.getWriter().println(userInformationJSONstring);
     }
 
 }

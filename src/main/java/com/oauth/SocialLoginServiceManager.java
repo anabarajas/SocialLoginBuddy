@@ -7,6 +7,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -25,8 +26,9 @@ public class SocialLoginServiceManager {
     private static String CLIENT_ID_HARDCODED = "282485959172-68df31dotcu7lo705k4up9dkd5tfcen4.apps.googleusercontent.com";
     private static String CLIENT_SECRET_HARDCODED = "9vgxMF-GPWvC-bmE0l8ABkz6";
     private static String REDIRECTION_URI_HARDCODED = "http://localhost:8080/SocialLoginBuddy/redirect?action=login";
-    private static String GOOGLE_AUTHORIZATION_URI_HARDCODED = "https://accounts.google.com/o/oauth2/v2/auth";
-    private static String GOOGLE_TOKEN_URI_HARDCODED = "https://www.googleapis.com/oauth2/v4/token";
+    private static String GOOGLE_AUTHORIZATION_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
+    private static String GOOGLE_TOKEN_ENDPOINT = "https://www.googleapis.com/oauth2/v4/token";
+    private static String GOOGLE_USER_INFO_ENDPOINT = "https://www.googleapis.com/oauth2/v3/userinfo";
 
 
 
@@ -38,10 +40,10 @@ public class SocialLoginServiceManager {
     public static void createAuthorizationRequestURI(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             StringBuilder authenticationURL = new StringBuilder();
-            authenticationURL.append(GOOGLE_AUTHORIZATION_URI_HARDCODED).append("?")
+            authenticationURL.append(GOOGLE_AUTHORIZATION_ENDPOINT).append("?")
                     .append("client_id=").append(CLIENT_ID_HARDCODED).append("&")
                     .append("response_type=code&")
-                    .append("scope=").append(Constants.OPENID_SCOPE).append("&")
+                    .append("scope=").append(Constants.OPENID_SCOPE.getKey()).append("&")
                     .append("redirect_uri=").append(REDIRECTION_URI_HARDCODED).append("&")
                     .append("state=").append(USER_HARDCODED_SESSION);
 
@@ -54,8 +56,9 @@ public class SocialLoginServiceManager {
 
 
     public String POSTrequest_accessToken_IDtoken(String authorizationCode) {
+        // TODO: DefaultHttpClient is deprecated :(
         HttpClient httpClient = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(GOOGLE_TOKEN_URI_HARDCODED);
+        HttpPost httpPost = new HttpPost(GOOGLE_TOKEN_ENDPOINT);
         try {
             // build POST request
             List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
@@ -93,7 +96,16 @@ public class SocialLoginServiceManager {
     }
 
     public String getUserInfo(String accessToken) {
-
-        return "";
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpGet httpGet = new HttpGet(GOOGLE_USER_INFO_ENDPOINT);
+        httpGet.setHeader("Authorization", "Bearer " + accessToken);
+        System.out.println();
+        try {
+            HttpResponse httpResponse = httpClient.execute(httpGet);
+            return EntityUtils.toString(httpResponse.getEntity());
+        } catch (IOException e) {
+            System.out.println(new StringBuilder("SocialLoginServiceManager:getUserInfo:: GET request failed: ").append(e.getStackTrace()));
+            return "Error getting user info!";
+        }
     }
 }
