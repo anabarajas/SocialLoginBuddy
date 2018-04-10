@@ -25,7 +25,7 @@ public class SocialLoginServiceManager {
     private static String USER_HARDCODED_SESSION = "1234567890abcdefg";
     private static String CLIENT_ID_HARDCODED = "282485959172-68df31dotcu7lo705k4up9dkd5tfcen4.apps.googleusercontent.com";
     private static String CLIENT_SECRET_HARDCODED = "9vgxMF-GPWvC-bmE0l8ABkz6";
-    private static String REDIRECTION_URI_HARDCODED = "http://localhost:8080/SocialLoginBuddy/redirect?action=login";
+    private static String REDIRECTION_URI_HARDCODED = "http://localhost:8080/SocialLoginBuddy/userinfo?action=login";
     private static String GOOGLE_AUTHORIZATION_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
     private static String GOOGLE_TOKEN_ENDPOINT = "https://www.googleapis.com/oauth2/v4/token";
     private static String GOOGLE_USER_INFO_ENDPOINT = "https://www.googleapis.com/oauth2/v3/userinfo";

@@ -11,7 +11,7 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet>
-    <servlet-name>Redirect</servlet-name>
+    <servlet-name>UserInfo</servlet-name>
     <servlet-class>com.servlets.OauthAuthorizationServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -21,7 +21,7 @@
     <url-pattern>/authenticate</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>Redirect</servlet-name>
-    <url-pattern>/redirect</url-pattern>
+    <servlet-name>UserInfo</servlet-name>
+    <url-pattern>/userinfo</url-pattern>
   </servlet-mapping>
 </web-app>
