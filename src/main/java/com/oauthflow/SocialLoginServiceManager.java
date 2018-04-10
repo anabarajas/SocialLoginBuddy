@@ -12,7 +12,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -24,11 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SocialLoginServiceManager {
-    private static String USER_HARDCODED_SESSION = "1234567890abcdefg";
+    private static String CLIENT_HARDCODED_SESSION = "1234567890abcdefg";
     private static String CLIENT_ID_HARDCODED = "282485959172-68df31dotcu7lo705k4up9dkd5tfcen4.apps.googleusercontent.com";
     private static String CLIENT_SECRET_HARDCODED = "9vgxMF-GPWvC-bmE0l8ABkz6";
 
-    private static String REDIRECTION_URI_HARDCODED = "http://localhost:8080/SocialLoginBuddy/userinfo?action=login";
+    private static String REDIRECTION_URI_HARDCODED = "http://ana.socialloginbuddy.ca.com:8080/SocialLoginBuddy/userinfo?action=login";
 
     private static String GOOGLE_AUTHORIZATION_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
     private static String GOOGLE_TOKEN_ENDPOINT = "https://www.googleapis.com/oauth2/v4/token";
@@ -53,7 +52,7 @@ public class SocialLoginServiceManager {
                     .append("&").append(Constants.REDIRECT_URI.getKey())
                     .append("=").append(REDIRECTION_URI_HARDCODED)
                     .append("&").append(Constants.STATE.getKey())
-                    .append("=").append(USER_HARDCODED_SESSION);
+                    .append("=").append(CLIENT_HARDCODED_SESSION);
             LOGGER.info(new StringBuffer("createAuthorizationRequestURI:: AuthenticationURL: ").append(authenticationURL));
             response.sendRedirect(authenticationURL.toString());
         } catch (IOException e) {
