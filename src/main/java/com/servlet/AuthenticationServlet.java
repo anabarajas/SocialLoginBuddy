@@ -8,13 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class OauthServlet extends HttpServlet {
+public class AuthenticationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        AuthenticationRequest oauthRequest = new AuthenticationRequest();
-        oauthRequest.createAuthorizationURI(request,response);
+        AuthenticationRequest.createAuthorizationURI(request,response);
       //  response.getWriter().println("Hello Ana (you are a boss)!!");
     }
 

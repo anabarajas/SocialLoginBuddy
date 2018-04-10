@@ -1,5 +1,5 @@
 <html>
 <body>
-<h2>Hello ANA (you are a boss) - index.jsp!!</h2>
+<h2>YASSSSS. Coming up soon (client info :D)!!</h2>
 </body>
 </html>
