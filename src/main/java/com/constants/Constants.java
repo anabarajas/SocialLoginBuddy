@@ -10,6 +10,9 @@ public enum Constants {
     CODE("code"),
     GRANT_TYPE("grant_type"),
     REDIRECT_URI("redirect_uri"),
+    RESPONSE_TYPE("response_type"),
+    SCOPE("scope"),
+    STATE("state"),
     OPENID_SCOPE("openid%20profile%20email");
 
     private final String key;

@@ -39,7 +39,6 @@ public class ParsingUtils {
                 } else {
                     System.out.println("ParsingUtils:parsePOSTproviderResponse:: no access_token in response");
                 }
-
             } else {
                 System.out.println("ParsingUtils:parsePOSTproviderResponse:: parsing failed");
             }

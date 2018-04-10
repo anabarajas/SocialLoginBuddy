@@ -12,6 +12,8 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +31,7 @@ public class SocialLoginServiceManager {
     private static String GOOGLE_AUTHORIZATION_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
     private static String GOOGLE_TOKEN_ENDPOINT = "https://www.googleapis.com/oauth2/v4/token";
     private static String GOOGLE_USER_INFO_ENDPOINT = "https://www.googleapis.com/oauth2/v3/userinfo";
+    private static final Logger LOGGER = LogManager.getLogger(SocialLoginServiceManager.class);
 
 
 
@@ -40,13 +43,17 @@ public class SocialLoginServiceManager {
     public static void createAuthorizationRequestURI(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             StringBuilder authenticationURL = new StringBuilder();
-            authenticationURL.append(GOOGLE_AUTHORIZATION_ENDPOINT).append("?")
-                    .append("client_id=").append(CLIENT_ID_HARDCODED).append("&")
-                    .append("response_type=code&")
-                    .append("scope=").append(Constants.OPENID_SCOPE.getKey()).append("&")
-                    .append("redirect_uri=").append(REDIRECTION_URI_HARDCODED).append("&")
-                    .append("state=").append(USER_HARDCODED_SESSION);
-
+            authenticationURL.append(GOOGLE_AUTHORIZATION_ENDPOINT)
+                    .append("?").append(Constants.CLIENT_ID.getKey())
+                    .append("=").append(CLIENT_ID_HARDCODED)
+                    .append("&").append(Constants.RESPONSE_TYPE.getKey())
+                    .append("=").append(Constants.CODE.getKey())
+                    .append("&").append(Constants.SCOPE.getKey())
+                    .append("=").append(Constants.OPENID_SCOPE.getKey())
+                    .append("&").append(Constants.REDIRECT_URI.getKey())
+                    .append("=").append(REDIRECTION_URI_HARDCODED)
+                    .append("&").append(Constants.STATE.getKey())
+                    .append("=").append(USER_HARDCODED_SESSION);
             System.out.println(new StringBuffer("SocialLoginServiceManager:createAuthorizationRequestURI:: AuthenticationURL: ").append(authenticationURL));
             response.sendRedirect(authenticationURL.toString());
         } catch (IOException e) {
