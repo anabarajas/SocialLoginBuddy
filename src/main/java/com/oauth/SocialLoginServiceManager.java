@@ -1,7 +1,7 @@
 package com.oauth;
 
 import com.constants.Constants;
-import com.servlet.ParsingUtils;
+import com.servlets.ParsingUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -98,7 +98,7 @@ public class SocialLoginServiceManager {
     public String getUserInfo(String accessToken) {
         HttpClient httpClient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(GOOGLE_USER_INFO_ENDPOINT);
-        httpGet.setHeader("Authorization", "Bearer " + accessToken);
+        httpGet.setHeader(Constants.AUTHORIZATION.getKey(), Constants.BEARER.getKey() + accessToken);
         System.out.println();
         try {
             HttpResponse httpResponse = httpClient.execute(httpGet);

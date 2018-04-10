@@ -1,4 +1,4 @@
-package com.servlet;
+package com.servlets;
 
 import com.constants.Constants;
 import org.json.simple.JSONObject;
@@ -21,7 +21,7 @@ public class ParsingUtils {
                 }
             }
         }
-        System.out.println("RedirectionServlet:: no code recieved");
+        System.out.println("OauthAuthorizationServlet:: no code recieved");
         return "";
     }
 

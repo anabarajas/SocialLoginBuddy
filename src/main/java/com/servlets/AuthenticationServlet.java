@@ -1,4 +1,4 @@
-package com.servlet;
+package com.servlets;
 
 import com.oauth.SocialLoginServiceManager;
 

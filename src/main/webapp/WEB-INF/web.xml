@@ -7,12 +7,12 @@
 
   <servlet>
     <servlet-name>Authentication</servlet-name>
-    <servlet-class>com.servlet.AuthenticationServlet</servlet-class>
+    <servlet-class>com.servlets.AuthenticationServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet>
     <servlet-name>Redirect</servlet-name>
-    <servlet-class>com.servlet.RedirectionServlet</servlet-class>
+    <servlet-class>com.servlets.OauthAuthorizationServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
