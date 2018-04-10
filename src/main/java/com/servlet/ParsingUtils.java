@@ -1,6 +1,6 @@
 package com.servlet;
 
-import com.constants.JSONKeys;
+import com.constants.Constants;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -32,7 +32,7 @@ public class ParsingUtils {
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(POSTrequest);
             if (jsonObject != null) {
-                access_token = (String) jsonObject.get(JSONKeys.ACCESS_TOKEN.getKey());
+                access_token = (String) jsonObject.get(Constants.ACCESS_TOKEN.getKey());
                 if (!access_token.equals("")) {
                     System.out.println(new StringBuilder("ParsingUtils:parsePOSTproviderResponse:: access_token is: ").append(access_token));
 

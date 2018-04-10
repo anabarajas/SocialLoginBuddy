@@ -1,6 +1,6 @@
 package com.servlet;
 
-import com.oauth.AuthenticationRequest;
+import com.oauth.SocialLoginServiceManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,7 +13,7 @@ public class AuthenticationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        AuthenticationRequest.createAuthorizationURI(request,response);
+        SocialLoginServiceManager.createAuthorizationRequestURI(request,response);
       //  response.getWriter().println("Hello Ana (you are a boss)!!");
     }
 

@@ -1,6 +1,6 @@
 package com.servlet;
 
-import com.oauth.AuthenticationRequest;
+import com.oauth.SocialLoginServiceManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,13 +19,18 @@ public class RedirectionServlet extends HttpServlet {
         } else if (request.getQueryString() == "") {
             System.out.println("RedirectionServlet:: no redirection URI from service provider");
         } else {
+            // Get authorization code
             String redirectURLqueryString = request.getQueryString();
             System.out.println(new StringBuilder("RedirectionServlet:: RedirectURI from Google: ").append(redirectURLqueryString));
             String authorizationCode = ParsingUtils.parseRedirectURL(redirectURLqueryString);
-
             if (authorizationCode != null) {
-                AuthenticationRequest ar = new AuthenticationRequest();
-                output = ar.getAccessToken(authorizationCode);
+                // Get access token
+                SocialLoginServiceManager socialLoginServiceManager = new SocialLoginServiceManager();
+                String accessToken = socialLoginServiceManager.getAccessToken(authorizationCode);
+                // Get user info
+                if (accessToken != null || !accessToken.equals("")) {
+                    socialLoginServiceManager.getUserInfo(accessToken);
+                }
             }
 
         }
