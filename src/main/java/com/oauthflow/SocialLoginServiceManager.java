@@ -1,7 +1,7 @@
-package com.oauth;
+package com.oauthflow;
 
 import com.constants.Constants;
-import com.servlets.ParsingUtils;
+import com.utils.ParsingUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;

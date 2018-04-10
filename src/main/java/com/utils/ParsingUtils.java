@@ -1,4 +1,4 @@
-package com.servlets;
+package com.utils;
 
 import com.constants.Constants;
 import org.json.simple.JSONObject;

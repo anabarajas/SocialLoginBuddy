@@ -1,6 +1,6 @@
 package com.servlets;
 
-import com.oauth.SocialLoginServiceManager;
+import com.oauthflow.SocialLoginServiceManager;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
