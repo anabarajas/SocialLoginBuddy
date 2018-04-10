@@ -27,17 +27,17 @@ public class SocialLoginServiceManager {
     private static String USER_HARDCODED_SESSION = "1234567890abcdefg";
     private static String CLIENT_ID_HARDCODED = "282485959172-68df31dotcu7lo705k4up9dkd5tfcen4.apps.googleusercontent.com";
     private static String CLIENT_SECRET_HARDCODED = "9vgxMF-GPWvC-bmE0l8ABkz6";
+
     private static String REDIRECTION_URI_HARDCODED = "http://localhost:8080/SocialLoginBuddy/userinfo?action=login";
+
     private static String GOOGLE_AUTHORIZATION_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth";
     private static String GOOGLE_TOKEN_ENDPOINT = "https://www.googleapis.com/oauth2/v4/token";
     private static String GOOGLE_USER_INFO_ENDPOINT = "https://www.googleapis.com/oauth2/v3/userinfo";
-    private static final Logger LOGGER = LogManager.getLogger(SocialLoginServiceManager.class);
 
-
+    private static final Logger LOGGER = Logger.getLogger(SocialLoginServiceManager.class);
 
     // TODO: Figure out how to get base URI from Discovery Document - use key "authorization_endpoint". Maybe?
     //public static String GOOGLE_DISCOVERY_DOCUMENT_URI = "https://accounts.google.com/.well-known/openid-configuration";
-
 
     // TODO: handle errors
     public static void createAuthorizationRequestURI(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -54,10 +54,10 @@ public class SocialLoginServiceManager {
                     .append("=").append(REDIRECTION_URI_HARDCODED)
                     .append("&").append(Constants.STATE.getKey())
                     .append("=").append(USER_HARDCODED_SESSION);
-            System.out.println(new StringBuffer("SocialLoginServiceManager:createAuthorizationRequestURI:: AuthenticationURL: ").append(authenticationURL));
+            LOGGER.info(new StringBuffer("createAuthorizationRequestURI:: AuthenticationURL: ").append(authenticationURL));
             response.sendRedirect(authenticationURL.toString());
         } catch (IOException e) {
-            System.out.println("YO! There was an error");
+            LOGGER.error(new StringBuffer("createAuthorizationRequestURI:: failed URI redirection: ").append(e.getStackTrace()));
         }
     }
 
@@ -69,30 +69,34 @@ public class SocialLoginServiceManager {
         try {
             // build POST request
             List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-            urlParameters.add(new BasicNameValuePair(Constants.CLIENT_ID.getKey(), CLIENT_ID_HARDCODED));
-            urlParameters.add(new BasicNameValuePair(Constants.CLIENT_SECRET.getKey(), CLIENT_SECRET_HARDCODED));
-            urlParameters.add(new BasicNameValuePair(Constants.REDIRECT_URI.getKey(), REDIRECTION_URI_HARDCODED));
-            urlParameters.add(new BasicNameValuePair(Constants.GRANT_TYPE.getKey(), Constants.AUTHORIZATION_CODE.getKey()));
-            urlParameters.add(new BasicNameValuePair(Constants.CODE.getKey(), authorizationCode));
+            urlParameters.add(new BasicNameValuePair(Constants.CLIENT_ID.getKey(),
+                    CLIENT_ID_HARDCODED));
+            urlParameters.add(new BasicNameValuePair(Constants.CLIENT_SECRET.getKey(),
+                    CLIENT_SECRET_HARDCODED));
+            urlParameters.add(new BasicNameValuePair(Constants.REDIRECT_URI.getKey(),
+                    REDIRECTION_URI_HARDCODED));
+            urlParameters.add(new BasicNameValuePair(Constants.GRANT_TYPE.getKey(),
+                    Constants.AUTHORIZATION_CODE.getKey()));
+            urlParameters.add(new BasicNameValuePair(Constants.CODE.getKey(),
+                    authorizationCode));
 
             HttpEntity httpEntity = new UrlEncodedFormEntity(urlParameters);
 
             ByteArrayOutputStream httpEntityOutputStream = new ByteArrayOutputStream();
             httpEntity.writeTo(httpEntityOutputStream);
             httpPost.setEntity(httpEntity);
-            System.out.println("SocialLoginServiceManager:POSTrequest_accessToken_IDtoken:: POST request http parameters: " + httpEntityOutputStream.toString());
+            LOGGER.info(new StringBuffer("POSTrequest_accessToken_IDtoken:: POST request http parameters: ").append(httpEntityOutputStream.toString()));
 
             // POST request
             HttpResponse response = httpClient.execute(httpPost);
             String responseEntity = EntityUtils.toString(response.getEntity());
 
-            System.out.println("SocialLoginServiceManager:POSTrequest_accessToken_IDtoken:: Response from provider = "  + responseEntity);
-            System.out.println("SocialLoginServiceManager:POSTrequest_accessToken_IDtoken:: HTTP POST request response Code: " + response.getStatusLine().getStatusCode());
+            LOGGER.info(new StringBuffer("POSTrequest_accessToken_IDtoken:: Response from provider = ").append(responseEntity));
+            LOGGER.info(new StringBuffer("POSTrequest_accessToken_IDtoken:: HTTP POST request response Code: ").append(response.getStatusLine().getStatusCode()));
             return responseEntity;
 
         } catch (IOException e) {
-            e.printStackTrace();
-            // TODO: add logger classes
+            LOGGER.error(new StringBuffer("POSTrequest_accessToken_IDtoken::").append(e.getStackTrace()));
             return "SocialLoginServiceManager:POSTrequest_accessToken_IDtoken:: creation of POST request failed";
         }
     }
@@ -106,12 +110,11 @@ public class SocialLoginServiceManager {
         HttpClient httpClient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(GOOGLE_USER_INFO_ENDPOINT);
         httpGet.setHeader(Constants.AUTHORIZATION.getKey(), Constants.BEARER.getKey() + accessToken);
-        System.out.println();
         try {
             HttpResponse httpResponse = httpClient.execute(httpGet);
             return EntityUtils.toString(httpResponse.getEntity());
         } catch (IOException e) {
-            System.out.println(new StringBuilder("SocialLoginServiceManager:getUserInfo:: GET request failed: ").append(e.getStackTrace()));
+            LOGGER.error(new StringBuffer("getUserInfo:: GET request failed: ").append(e.getStackTrace()));
             return "Error getting user info!";
         }
     }

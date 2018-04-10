@@ -1,6 +1,7 @@
 package com.servlets;
 
 import com.oauthflow.SocialLoginServiceManager;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AuthenticationServlet extends HttpServlet {
+
+    private static final Logger LOGGER = Logger.getLogger(AuthenticationServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -19,11 +22,11 @@ public class AuthenticationServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        System.out.println("Servlet " + this.getServletName() + " has started");
+        LOGGER.info(new StringBuffer("Servlet ").append(this.getServletName()).append(" has started"));
     }
 
     @Override
     public void destroy() {
-        System.out.println("Servlet " + this.getServletName() + " has stopped");
+        LOGGER.info(new StringBuffer("Servlet ").append(this.getServletName()).append(" has stopped"));
     }
 }

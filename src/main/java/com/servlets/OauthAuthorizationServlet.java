@@ -2,6 +2,7 @@ package com.servlets;
 
 import com.oauthflow.SocialLoginServiceManager;
 import com.utils.ParsingUtils;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,18 +12,20 @@ import java.io.IOException;
 
 public class OauthAuthorizationServlet extends HttpServlet {
 
+    private static final Logger LOGGER = Logger.getLogger(OauthAuthorizationServlet.class);
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String userInformationJSONstring = "";
         if (request.getQueryString() == null) {
             // TODO: handle error properly
-            System.out.println("OauthAuthorizationServlet:: null redirection URI from service provider");
+            LOGGER.info("doGet:: null redirection URI from service provider");
         } else if (request.getQueryString() == "") {
-            System.out.println("OauthAuthorizationServlet:: no redirection URI from service provider");
+            LOGGER.info("doGet:: no redirection URI from service provider");
         } else {
             // Get authorization code
             String redirectURLqueryString = request.getQueryString();
-            System.out.println(new StringBuilder("OauthAuthorizationServlet:: RedirectURI from Google: ").append(redirectURLqueryString));
+            LOGGER.info(new StringBuilder("doGet:: RedirectURI sent from Google: ").append(redirectURLqueryString));
             String authorizationCode = ParsingUtils.parseRedirectURL(redirectURLqueryString);
             if (authorizationCode != null) {
                 // Get access token
