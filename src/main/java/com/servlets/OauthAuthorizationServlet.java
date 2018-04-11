@@ -2,7 +2,6 @@ package com.servlets;
 
 import com.constants.Constants;
 import com.oauthflow.SocialLoginServiceManager;
-import com.utils.ParsingUtils;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -11,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.HashMap;
 
 public class OauthAuthorizationServlet extends HttpServlet {
 
@@ -40,14 +40,17 @@ public class OauthAuthorizationServlet extends HttpServlet {
         try{
             // Get access token
             SocialLoginServiceManager socialLoginServiceManager = new SocialLoginServiceManager();
-            String accessToken = socialLoginServiceManager.getAccessToken(authorizationCode);
-            // Get user info
-            if (accessToken != null || !accessToken.equals("")) {
-                userInformationJSONstring = socialLoginServiceManager.getUserInfo(accessToken);
+            HashMap<Constants, String> clientTokens= socialLoginServiceManager.getClientTokens(authorizationCode);
+
+            if (clientTokens.size() < 2){
+                throw new IllegalArgumentException("performOAuthFlow:: Missing fields in provider response");
             }
+            // Get user info
+            userInformationJSONstring = socialLoginServiceManager.getUserInfo(clientTokens.get(Constants.ACCESS_TOKEN));
         } catch (Exception e) {
             LOGGER.warn(new StringBuilder("performOAuthFlow:: ").append(e.getStackTrace()));
         }
         response.getWriter().println(userInformationJSONstring);
+       // response.sendRedirect();
     }
 }

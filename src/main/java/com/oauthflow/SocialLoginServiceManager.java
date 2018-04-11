@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class SocialLoginServiceManager {
@@ -100,7 +101,7 @@ public class SocialLoginServiceManager {
         }
     }
 
-    public String getAccessToken(String authorizationCode) {
+    public HashMap<Constants, String> getClientTokens(String authorizationCode) {
         String providerResponse = POSTrequest_accessToken_IDtoken(authorizationCode);
         return ParsingUtils.parsePOSTproviderResponse(providerResponse);
     }

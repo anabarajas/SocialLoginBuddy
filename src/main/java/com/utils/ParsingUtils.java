@@ -12,27 +12,34 @@ public class ParsingUtils {
 
     private static final Logger LOGGER = Logger.getLogger(ParsingUtils.class);
 
-    public static String parsePOSTproviderResponse(String POSTrequest){
+    public static HashMap<Constants, String> parsePOSTproviderResponse(String POSTrequest){
         JSONParser parser = new JSONParser();
-        String access_token = "";
+        HashMap<Constants, String> clientTokens = new HashMap<>();
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(POSTrequest);
             if (jsonObject != null) {
-                access_token = (String) jsonObject.get(Constants.ACCESS_TOKEN.getKey());
-                if (!access_token.equals("")) {
-                    LOGGER.info(new StringBuilder("parsePOSTproviderResponse:: access_token is: ").append(access_token));
-
+                // Get access_token
+                String accessTokenValue = (String) jsonObject.get(Constants.ACCESS_TOKEN.getKey());
+                if (accessTokenValue != null || !accessTokenValue.equals("")) {
+                    clientTokens.put(Constants.ACCESS_TOKEN, accessTokenValue);
+                    LOGGER.info(new StringBuilder("parsePOSTproviderResponse:: access_token in response is: ").append(accessTokenValue));
                 } else {
-                    LOGGER.info("parsePOSTproviderResponse:: no access_token in response");
+                    LOGGER.info("parsePOSTproviderResponse:: no access_token recieved");
+                }
+                // Get id_token
+                String idTokenValue = (String) jsonObject.get(Constants.ID_TOKEN.getKey());
+                if (idTokenValue != null || !idTokenValue.equals("")) {
+                    clientTokens.put(Constants.ID_TOKEN, idTokenValue);
+                    LOGGER.info(new StringBuilder("parsePOSTproviderResponse:: id_token in response is: ").append(idTokenValue));
+                } else {
+                    LOGGER.info("parsePOSTproviderResponse:: no id_token recieved");
                 }
             } else {
-                LOGGER.info("parsePOSTproviderResponse:: parsing failed");
+                LOGGER.info("parsePOSTproviderResponse:: JSON object parsing failed");
             }
         } catch (ParseException e) {
             LOGGER.error(new StringBuilder("parsePOSTproviderResponse:: ").append(e.getStackTrace()));
         }
-        finally {
-            return access_token;
-        }
+        return clientTokens;
     }
 }

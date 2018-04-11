@@ -5,7 +5,7 @@
   <artifactId>SocialLoginBuddy</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>Social Login Maven Webapp</name>
+  <name>SocialLoginBuddy Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>

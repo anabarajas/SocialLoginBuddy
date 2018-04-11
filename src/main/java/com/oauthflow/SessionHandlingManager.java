@@ -20,6 +20,9 @@ public class SessionHandlingManager {
         String client_redirect_uri = request.getParameter(Constants.REDIRECT_URI.getKey());
         String client_session = request.getParameter(Constants.STATE.getKey());
         LOGGER.info(new StringBuilder("persistSession:: client redirect uri: ").append(client_redirect_uri).append(", \n client session: ").append(client_session));
+
+        // TODO: ask sasha --> / how to get rid of SocialLoginBuddy
+
         return "";
     }
 }

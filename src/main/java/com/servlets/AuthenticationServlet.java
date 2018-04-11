@@ -17,7 +17,7 @@ public class AuthenticationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        SessionHandlingManager.persistSession(request);
+        //SessionHandlingManager.persistSession(request);
         SocialLoginServiceManager.createAuthorizationRequestURI(request,response);
       //  response.getWriter().println("Hello Ana (you are a boss)!!");
     }
