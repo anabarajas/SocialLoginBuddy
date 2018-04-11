@@ -15,13 +15,11 @@ public class SessionHandlingManager {
     private static final Logger LOGGER = Logger.getLogger(SessionHandlingManager.class);
 
     public static String persistSession(HttpServletRequest request) throws ServletException, IOException {
-        String clientQueryString = request.getQueryString();
-        LOGGER.info(new StringBuilder("persistSession:: client query string is: ").append(clientQueryString));
-        HashMap<Constants, String> clientURIparameters = ParsingUtils.extractClientURIparameters(clientQueryString);
-        String clientRedirectURI = clientURIparameters.get(Constants.REDIRECT_URI);
-        String clientState = clientURIparameters.get(Constants.STATE);
-        // TODO: handle errors
+        String clientURLQueryString = request.getQueryString();
 
+        String client_redirect_uri = request.getParameter(Constants.REDIRECT_URI.getKey());
+        String client_session = request.getParameter(Constants.STATE.getKey());
+        LOGGER.info(new StringBuilder("persistSession:: client redirect uri: ").append(client_redirect_uri).append(", \n client session: ").append(client_session));
         return "";
     }
 }

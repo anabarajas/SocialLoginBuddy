@@ -6,28 +6,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.util.HashMap;
+
 public class ParsingUtils {
 
     private static final Logger LOGGER = Logger.getLogger(ParsingUtils.class);
-
-    public static String parseRedirectURL(String queryString) {
-        String[] array = queryString.split("&");
-        for (String str : array) {
-            String[] pair = str.split("=");
-            if (2 != pair.length) {
-                throw new IllegalArgumentException("parseRedirectURL:: URI Parse failed");
-            } else {
-                if (pair[0].equals(Constants.CODE.getKey())) {
-                    String authorizationCode = pair[1];
-                    LOGGER.info(new StringBuilder("parseRedirectURL:: code is: ").append(authorizationCode));
-                    return authorizationCode;
-                }
-            }
-        }
-        LOGGER.info("OauthAuthorizationServlet:: no code recieved");
-        return "";
-    }
-
 
     public static String parsePOSTproviderResponse(String POSTrequest){
         JSONParser parser = new JSONParser();
