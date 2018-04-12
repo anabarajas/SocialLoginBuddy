@@ -19,7 +19,6 @@ public class AuthenticationServlet extends HttpServlet {
             throws ServletException, IOException {
         SessionHandlingManager.persistClientProvidedRedirectURI(request);
         SocialLoginServiceManager.createAuthorizationRequestURI(request,response);
-      //  response.getWriter().println("Hello Ana (you are a boss)!!");
     }
 
     @Override

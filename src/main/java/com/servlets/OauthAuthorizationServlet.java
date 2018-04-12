@@ -24,8 +24,6 @@ public class OauthAuthorizationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         LOGGER.info(new StringBuilder("doGet:: Response URL from provider: ").append(request.getQueryString()));
         try {
-
-            // TODO : create new endpoint to display user data!!! or rename endpoints
             if (request.getQueryString() == null) {
                 throw new MalformedURLException("doGet:: null response URL from service provider");
             } else if (request.getQueryString().equals("")) {
@@ -34,6 +32,7 @@ public class OauthAuthorizationServlet extends HttpServlet {
                 // Get authorization code from provider URL response
                 String authorizationCode = request.getParameter(Constants.CODE.getKey());
                 LOGGER.info(new StringBuilder("doGet:: code is: ").append(authorizationCode));
+
                 performOAuthFlow(authorizationCode, response);
             }
         } catch (Exception e) {
