@@ -14,7 +14,8 @@ public enum Constants {
     RESPONSE_TYPE("response_type"),
     SCOPE("scope"),
     STATE("state"),
-    OPENID_SCOPE("openid%20profile%20email");
+    OPENID_SCOPE("openid%20profile%20email"),
+    USER_INFO("user_info");
 
     private final String key;
 

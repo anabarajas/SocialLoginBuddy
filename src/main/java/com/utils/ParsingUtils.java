@@ -42,4 +42,21 @@ public class ParsingUtils {
         }
         return clientTokens;
     }
+
+    public static String convertQueryStringToResponseURI(String queryString) {
+        // remove redirect_uri key from query string
+        String substringURI = queryString.substring(Constants.REDIRECT_URI.getKey().length() + 1);
+        StringBuilder clientResponseURI = new StringBuilder();
+
+        String[] queryParameters = substringURI.split("&");
+
+        clientResponseURI.append(queryParameters[0]).append("?");
+        for (int s = 1; s < queryParameters.length; s++) {
+            clientResponseURI.append(queryParameters[s]);
+            if (s < queryParameters.length - 1) {
+                clientResponseURI.append("&");
+            }
+        }
+        return clientResponseURI.toString();
+    }
 }

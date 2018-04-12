@@ -112,7 +112,9 @@ public class SocialLoginServiceManager {
         httpGet.setHeader(Constants.AUTHORIZATION.getKey(), Constants.BEARER.getKey() + accessToken);
         try {
             HttpResponse httpResponse = httpClient.execute(httpGet);
-            return EntityUtils.toString(httpResponse.getEntity());
+            String userInfoJSONResponseString = EntityUtils.toString(httpResponse.getEntity());
+            LOGGER.info(new StringBuilder("getUserInfo:: provider response:").append(userInfoJSONResponseString));
+            return userInfoJSONResponseString;
         } catch (IOException e) {
             LOGGER.error(new StringBuffer("getUserInfo:: GET request failed: ").append(e.getStackTrace()));
             return "Error getting user info!";

@@ -15,6 +15,10 @@
     <servlet-class>com.servlets.OauthAuthorizationServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
+  <servlet>
+    <servlet-name>MyClient</servlet-name>
+    <servlet-class>com.servlets.MyClientServlet</servlet-class>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>Authentication</servlet-name>
@@ -23,5 +27,9 @@
   <servlet-mapping>
     <servlet-name>UserInfo</servlet-name>
     <url-pattern>/userinfo</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>MyClient</servlet-name>
+    <url-pattern>/myclient</url-pattern>
   </servlet-mapping>
 </web-app>
