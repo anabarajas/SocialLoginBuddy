@@ -17,7 +17,7 @@ public class AuthenticationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        SessionHandlingManager.persistClientProvidedRedirectURI(request);
+        SessionHandlingManager.persistClientRedirectUriQueryParameters(request);
         OauthFlowServiceManager.createAuthorizationRequestURI(request,response);
     }
 

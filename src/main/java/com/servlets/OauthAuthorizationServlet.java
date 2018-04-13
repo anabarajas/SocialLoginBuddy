@@ -41,16 +41,23 @@ public class OauthAuthorizationServlet extends HttpServlet {
 
     private String encodeClientInfoResponseRedirectURI(String userInfoJsonString) {
 
-        StringBuilder clientProvidedRedirectURI = new StringBuilder(SessionHandlingManager.getClientRedirectUri());
+        StringBuilder clientRedirectUri = new StringBuilder(SessionHandlingManager.getClientRedirectUri());
 
-        clientProvidedRedirectURI.append("&")
-                    .append(Constants.USER_INFO.getKey()).append("=")
-                    .append(userInfoJsonString).append("&");
+        clientRedirectUri.append("?")
+                .append(Constants.STATE.getKey()).append("=")
+                .append(SessionHandlingManager.getClientState()).append("&")
+                .append(Constants.USER_INFO.getKey()).append("=")
+                .append(userInfoJsonString).append("&");
 //                    .append(Constants.ACCESS_TOKEN.getKey()).append("=")
 //                    .append(SessionHandlingManager.getClientAccessToken()).append("&")
 //                    .append(Constants.ID_TOKEN.getKey()).append("=")
 //                    .append(SessionHandlingManager.getClientIdToken());
-        return clientProvidedRedirectURI.toString();
+
+        // check for extra parameters in client redirect URI
+        if (!SessionHandlingManager.getClientOtherParams().equals("")) {
+            clientRedirectUri.append("&").append(SessionHandlingManager.getClientOtherParams());
+        }
+        return clientRedirectUri.toString();
     }
 
     private void performOAuthFlow(String authorizationCode, HttpServletResponse response) throws IOException {
@@ -80,7 +87,7 @@ public class OauthAuthorizationServlet extends HttpServlet {
             autoForm = buildAutoForm(clientResponseRedirectUri_urlEncoded, base64EncodedUserInformationJSONstring, clientTokens);
             LOGGER.info(new StringBuilder("performOAuthFlow:: POST form to client: ").append(autoForm));
         } catch (Exception e) {
-            LOGGER.warn(new StringBuilder("performOAuthFlow:: ").append(e.getStackTrace()));
+            LOGGER.warn(new StringBuilder("performOAuthFlow:: ").append(e.getLocalizedMessage()));
         }
         response.getWriter().println(autoForm);
     }
@@ -98,7 +105,7 @@ public class OauthAuthorizationServlet extends HttpServlet {
                         "<form action=\"").append(clientResponseRedirectUri_urlEncoded).append("\" method=\"POST\">\n" +
                 "<input type=\"hidden\" name=\"userinforesponse\" value=\"").append(base64EncodedUserInfoResponse).append("\">\n" +
                 "<input type=\"hidden\" name=\"id_token\" value=\"").append(clientTokens.get(Constants.ID_TOKEN)).append("\">\n" +
-                "<input type=\"hidden\" name=\"state \" value=\"${state}\">\n" +
+                "<input type=\"hidden\" name=\"state \" value=\"").append(SessionHandlingManager.getClientState()).append("\">\n" +
                 "<NOSCRIPT>\n" +
                 "  <INPUT TYPE=\"SUBMIT\" VALUE=\"Continue\">\n" +
                 "</NOSCRIPT>\n" +

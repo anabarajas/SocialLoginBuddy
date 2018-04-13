@@ -103,7 +103,7 @@ public class OauthFlowServiceManager {
 
     public HashMap<Constants, String> getClientTokens(String authorizationCode) {
         String providerResponse = postRequest_accessToken_idToken(authorizationCode);
-        return Utils.parsePOSTproviderResponse(providerResponse);
+        return Utils.parsePostProviderResponse(providerResponse);
     }
 
     public String getUserInfo(String accessToken) {

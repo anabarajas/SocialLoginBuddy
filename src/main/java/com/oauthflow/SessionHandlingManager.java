@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.HashMap;
 
 public class SessionHandlingManager {
@@ -19,14 +18,24 @@ public class SessionHandlingManager {
     protected static String CLIENT_ACCESS_TOKEN = "";
     protected static String CLIENT_ID_TOKEN = "";
     protected static String CLIENT_USER_INFO = "";
+    protected static String CLIENT_STATE = "";
+    protected static String CLIENT_OTHER_PARAMS = "";
 
-    public static void persistClientProvidedRedirectURI(HttpServletRequest request) throws UnsupportedEncodingException,ServletException, IOException {
+
+    public static void persistClientRedirectUriQueryParameters(HttpServletRequest request) throws UnsupportedEncodingException,ServletException, IOException {
         String queryString= URLDecoder.decode(request.getQueryString(), Constants.UTF_8.getKey());
             if (queryString != null && !queryString.equals("")){
-                CLIENT_REDIRECT_URI = Utils.convertQueryStringToResponseURI(queryString);
-                LOGGER.info(new StringBuilder("persistClientProvidedRedirectURI:: decoded client redirect uri: ").append(CLIENT_REDIRECT_URI));
+                HashMap<Constants, String> queryParameters = Utils.extractQueryParameters(queryString);
+                CLIENT_REDIRECT_URI = queryParameters.get(Constants.REDIRECT_URI);
+                CLIENT_STATE = queryParameters.get(Constants.STATE);
+
+                // check for extra parameters in client redirect URI
+                if (queryParameters.containsKey(Constants.OTHER_PARAMETERS)) {
+                    CLIENT_OTHER_PARAMS = queryParameters.get(Constants.OTHER_PARAMETERS);
+                }
+                LOGGER.info(new StringBuilder("persistClientRedirectUriQueryParameters:: decoded client redirect uri: ").append(CLIENT_REDIRECT_URI));
             } else {
-                LOGGER.fatal(new StringBuilder("persistClientProvidedRedirectURI:: no query string from client").append(request.getQueryString()));
+                LOGGER.fatal(new StringBuilder("persistClientRedirectUriQueryParameters:: no query string from client").append(request.getQueryString()));
             }
     }
     // TODO: ask sasha --> / how to get rid of SocialLoginBuddy
@@ -53,5 +62,13 @@ public class SessionHandlingManager {
 
     public static String getClientUserInfo() {
         return CLIENT_USER_INFO;
+    }
+
+    public static String getClientState() {
+        return CLIENT_STATE;
+    }
+
+    public static String getClientOtherParams() {
+        return CLIENT_OTHER_PARAMS;
     }
 }
