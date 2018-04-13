@@ -1,7 +1,7 @@
 package com.oauthflow;
 
 import com.constants.Constants;
-import com.utils.ParsingUtils;
+import com.utils.Utils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -103,7 +103,7 @@ public class SocialLoginServiceManager {
 
     public HashMap<Constants, String> getClientTokens(String authorizationCode) {
         String providerResponse = POSTrequest_accessToken_IDtoken(authorizationCode);
-        return ParsingUtils.parsePOSTproviderResponse(providerResponse);
+        return Utils.parsePOSTproviderResponse(providerResponse);
     }
 
     public String getUserInfo(String accessToken) {

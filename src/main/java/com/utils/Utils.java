@@ -6,11 +6,13 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.HashMap;
 
-public class ParsingUtils {
+public class Utils {
 
-    private static final Logger LOGGER = Logger.getLogger(ParsingUtils.class);
+    private static final Logger LOGGER = Logger.getLogger(Utils.class);
 
     public static HashMap<Constants, String> parsePOSTproviderResponse(String POSTrequest){
         JSONParser parser = new JSONParser();
@@ -48,6 +50,7 @@ public class ParsingUtils {
         String substringURI = queryString.substring(Constants.REDIRECT_URI.getKey().length() + 1);
         StringBuilder clientResponseURI = new StringBuilder();
 
+        // replace first & for ?
         String[] queryParameters = substringURI.split("&");
 
         clientResponseURI.append(queryParameters[0]).append("?");
@@ -58,5 +61,9 @@ public class ParsingUtils {
             }
         }
         return clientResponseURI.toString();
+    }
+
+    public static String decodeUserinfo(String encodedUserInfo) {
+        return new String(Base64.getDecoder().decode(encodedUserInfo));
     }
 }

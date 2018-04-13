@@ -15,7 +15,8 @@ public enum Constants {
     SCOPE("scope"),
     STATE("state"),
     OPENID_SCOPE("openid%20profile%20email"),
-    USER_INFO("user_info");
+    UTF_8("UTF-8"),
+    USER_INFO("userinforesponse");
 
     private final String key;
 
