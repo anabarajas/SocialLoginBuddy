@@ -1,7 +1,7 @@
 package com.servlets;
 
+import com.oauthflow.OauthFlowServiceManager;
 import com.oauthflow.SessionHandlingManager;
-import com.oauthflow.SocialLoginServiceManager;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -18,7 +18,7 @@ public class AuthenticationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         SessionHandlingManager.persistClientProvidedRedirectURI(request);
-        SocialLoginServiceManager.createAuthorizationRequestURI(request,response);
+        OauthFlowServiceManager.createAuthorizationRequestURI(request,response);
     }
 
     @Override

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SocialLoginServiceManager {
+public class OauthFlowServiceManager {
     private static String CLIENT_HARDCODED_SESSION = "1234567890abcdefg";
     private static String CLIENT_ID_HARDCODED = "282485959172-68df31dotcu7lo705k4up9dkd5tfcen4.apps.googleusercontent.com";
     private static String CLIENT_SECRET_HARDCODED = "9vgxMF-GPWvC-bmE0l8ABkz6";
@@ -34,7 +34,7 @@ public class SocialLoginServiceManager {
     private static String GOOGLE_TOKEN_ENDPOINT = "https://www.googleapis.com/oauth2/v4/token";
     private static String GOOGLE_USER_INFO_ENDPOINT = "https://www.googleapis.com/oauth2/v3/userinfo";
 
-    private static final Logger LOGGER = Logger.getLogger(SocialLoginServiceManager.class);
+    private static final Logger LOGGER = Logger.getLogger(OauthFlowServiceManager.class);
 
     // TODO: Figure out how to get base URI from Discovery Document - use key "authorization_endpoint". Maybe?
     //public static String GOOGLE_DISCOVERY_DOCUMENT_URI = "https://accounts.google.com/.well-known/openid-configuration";
@@ -62,7 +62,7 @@ public class SocialLoginServiceManager {
     }
 
 
-    public String POSTrequest_accessToken_IDtoken(String authorizationCode) {
+    public String postRequest_accessToken_idToken(String authorizationCode) {
         // TODO: DefaultHttpClient is deprecated :(
         HttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(GOOGLE_TOKEN_ENDPOINT);
@@ -85,24 +85,24 @@ public class SocialLoginServiceManager {
             ByteArrayOutputStream httpEntityOutputStream = new ByteArrayOutputStream();
             httpEntity.writeTo(httpEntityOutputStream);
             httpPost.setEntity(httpEntity);
-            LOGGER.info(new StringBuffer("POSTrequest_accessToken_IDtoken:: POST request http parameters: ").append(httpEntityOutputStream.toString()));
+            LOGGER.info(new StringBuffer("postRequest_accessToken_idToken:: POST request http parameters: ").append(httpEntityOutputStream.toString()));
 
             // POST request
             HttpResponse response = httpClient.execute(httpPost);
             String responseEntity = EntityUtils.toString(response.getEntity());
 
-            LOGGER.info(new StringBuffer("POSTrequest_accessToken_IDtoken:: Response from provider = ").append(responseEntity));
-            LOGGER.info(new StringBuffer("POSTrequest_accessToken_IDtoken:: HTTP POST request response Code: ").append(response.getStatusLine().getStatusCode()));
+            LOGGER.info(new StringBuffer("postRequest_accessToken_idToken:: Response from provider = ").append(responseEntity));
+            LOGGER.info(new StringBuffer("postRequest_accessToken_idToken:: HTTP POST request response Code: ").append(response.getStatusLine().getStatusCode()));
             return responseEntity;
 
         } catch (IOException e) {
-            LOGGER.error(new StringBuffer("POSTrequest_accessToken_IDtoken::").append(e.getStackTrace()));
-            return "SocialLoginServiceManager:POSTrequest_accessToken_IDtoken:: creation of POST request failed";
+            LOGGER.error(new StringBuffer("postRequest_accessToken_idToken::").append(e.getStackTrace()));
+            return "OauthFlowServiceManager:postRequest_accessToken_idToken:: creation of POST request failed";
         }
     }
 
     public HashMap<Constants, String> getClientTokens(String authorizationCode) {
-        String providerResponse = POSTrequest_accessToken_IDtoken(authorizationCode);
+        String providerResponse = postRequest_accessToken_idToken(authorizationCode);
         return Utils.parsePOSTproviderResponse(providerResponse);
     }
 
