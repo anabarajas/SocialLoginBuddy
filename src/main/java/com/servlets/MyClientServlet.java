@@ -32,9 +32,6 @@ public class MyClientServlet extends HttpServlet {
                 .map(r -> r.toString())
                 .collect(Collectors.toList());
 
-        // decode userInfo from base64
-        parameters.set(2, Utils.decodeUserinfo(parameters.get(2)));
-
         for (int i = 0; i < parameterNames.size(); i++) {
             responseToPrint.append(parameterNames.get(i)).append(" = ").append(parameters.get(i)).append("\n");
         }

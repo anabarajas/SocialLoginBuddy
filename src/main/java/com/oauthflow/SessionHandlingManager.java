@@ -1,42 +1,58 @@
 package com.oauthflow;
 
 import com.constants.Constants;
+import com.model.Client;
 import com.utils.Utils;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionHandlingManager {
 
     private static final Logger LOGGER = Logger.getLogger(SessionHandlingManager.class);
-    protected static String CLIENT_REDIRECT_URI = "";
-    protected static String CLIENT_ACCESS_TOKEN = "";
-    protected static String CLIENT_ID_TOKEN = "";
-    protected static String CLIENT_USER_INFO = "";
-    protected static String CLIENT_STATE = "";
-    protected static String CLIENT_OTHER_PARAMS = "";
+    private static String CLIENT_REDIRECT_URI = "";
+    private static String CLIENT_ACCESS_TOKEN = "";
+    private static String CLIENT_ID_TOKEN = "";
+    private static String CLIENT_USER_INFO = "";
+    private static String CLIENT_STATE = "";
+    private static String CLIENT_OTHER_PARAMS = "";
+    private static String CLIENT_SLB_STATE = "";
 
+    public static void persistClientQueryParameters(HttpServletRequest request) throws UnsupportedEncodingException,ServletException, IOException {
 
-    public static void persistClientRedirectUriQueryParameters(HttpServletRequest request) throws UnsupportedEncodingException,ServletException, IOException {
+        // Create session for client
+        HttpSession httpSession = request.getSession();
+        CLIENT_SLB_STATE = httpSession.getId();
+
+        // Decode client provided redirect_uri
         String queryString= URLDecoder.decode(request.getQueryString(), Constants.UTF_8.getKey());
-            if (queryString != null && !queryString.equals("")){
-                HashMap<Constants, String> queryParameters = Utils.extractQueryParameters(queryString);
-                CLIENT_REDIRECT_URI = queryParameters.get(Constants.REDIRECT_URI);
-                CLIENT_STATE = queryParameters.get(Constants.STATE);
 
-                // check for extra parameters in client redirect URI
-                if (queryParameters.containsKey(Constants.OTHER_PARAMETERS)) {
-                    CLIENT_OTHER_PARAMS = queryParameters.get(Constants.OTHER_PARAMETERS);
-                }
-                LOGGER.info(new StringBuilder("persistClientRedirectUriQueryParameters:: decoded client redirect uri: ").append(CLIENT_REDIRECT_URI));
-            } else {
-                LOGGER.fatal(new StringBuilder("persistClientRedirectUriQueryParameters:: no query string from client").append(request.getQueryString()));
+        if (queryString != null && !queryString.equals("")){
+            try {
+                CLIENT_REDIRECT_URI = request.getParameter(Constants.REDIRECT_URI.getKey());
+                CLIENT_STATE = request.getParameter(Constants.STATE.getKey());
+
+                // persist new client in http session
+                Client client = new Client(CLIENT_REDIRECT_URI, CLIENT_STATE);
+                httpSession.setAttribute(CLIENT_SLB_STATE, client);
+
+                LOGGER.info(new StringBuilder("persistClientQueryParameters - decoded client redirect uri: ").append(CLIENT_REDIRECT_URI)
+                        .append("\b clientSLB state:").append(CLIENT_SLB_STATE));
+
+            } catch (Exception e) {
+                throw new IllegalArgumentException("persistClientQueryParameters:: no redirect_uri or state provided by client");
             }
+        } else {
+            LOGGER.fatal(new StringBuilder("persistClientQueryParameters - no query string from client").append(request.getQueryString()));
+        }
     }
     // TODO: ask sasha --> / how to get rid of SocialLoginBuddy
     public static void persistClientTokens(HashMap<Constants, String> clientTokens) {
@@ -66,6 +82,10 @@ public class SessionHandlingManager {
 
     public static String getClientState() {
         return CLIENT_STATE;
+    }
+
+    public static String getClientSlbState() {
+        return CLIENT_SLB_STATE;
     }
 
     public static String getClientOtherParams() {

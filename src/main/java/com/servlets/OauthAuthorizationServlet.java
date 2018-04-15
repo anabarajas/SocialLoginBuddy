@@ -43,11 +43,11 @@ public class OauthAuthorizationServlet extends HttpServlet {
 
         StringBuilder clientRedirectUri = new StringBuilder(SessionHandlingManager.getClientRedirectUri());
 
-        clientRedirectUri.append("?")
-                .append(Constants.STATE.getKey()).append("=")
-                .append(SessionHandlingManager.getClientState()).append("&")
-                .append(Constants.USER_INFO.getKey()).append("=")
-                .append(userInfoJsonString).append("&");
+//        clientRedirectUri.append("?")
+//                .append(Constants.STATE.getKey()).append("=")
+//                .append(SessionHandlingManager.getClientState()).append("&")
+//                .append(Constants.USER_INFO.getKey()).append("=")
+//                .append(userInfoJsonString).append("&");
 //                    .append(Constants.ACCESS_TOKEN.getKey()).append("=")
 //                    .append(SessionHandlingManager.getClientAccessToken()).append("&")
 //                    .append(Constants.ID_TOKEN.getKey()).append("=")
@@ -102,10 +102,10 @@ public class OauthAuthorizationServlet extends HttpServlet {
                         "</HEAD>\n" +
                         "<body onLoad=\"document.forms[0].submit()\">\n" +
                         "<NOSCRIPT>Your browser does not support JavaScript.  Please click the 'Continue' button below to proceed. <br><br></NOSCRIPT>\n" +
-                        "<form action=\"").append(clientResponseRedirectUri_urlEncoded).append("\" method=\"POST\">\n" +
+                        "<form action=\"").append(SessionHandlingManager.getClientRedirectUri()).append("\" method=\"POST\">\n" +
                 "<input type=\"hidden\" name=\"userinforesponse\" value=\"").append(base64EncodedUserInfoResponse).append("\">\n" +
                 "<input type=\"hidden\" name=\"id_token\" value=\"").append(clientTokens.get(Constants.ID_TOKEN)).append("\">\n" +
-                "<input type=\"hidden\" name=\"state \" value=\"").append(SessionHandlingManager.getClientState()).append("\">\n" +
+                "<input type=\"hidden\" name=\"state\" value=\"").append(SessionHandlingManager.getClientState()).append("\">\n" +
                 "<NOSCRIPT>\n" +
                 "  <INPUT TYPE=\"SUBMIT\" VALUE=\"Continue\">\n" +
                 "</NOSCRIPT>\n" +
