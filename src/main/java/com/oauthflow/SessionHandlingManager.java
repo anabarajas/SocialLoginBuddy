@@ -45,7 +45,7 @@ public class SessionHandlingManager {
                 httpSession.setAttribute(CLIENT_SLB_STATE, client);
 
                 LOGGER.info(new StringBuilder("persistClientQueryParameters - decoded client redirect uri: ").append(CLIENT_REDIRECT_URI)
-                        .append("\b clientSLB state:").append(CLIENT_SLB_STATE));
+                        .append("\n clientSLB state:").append(CLIENT_SLB_STATE));
 
             } catch (Exception e) {
                 throw new IllegalArgumentException("persistClientQueryParameters:: no redirect_uri or state provided by client");

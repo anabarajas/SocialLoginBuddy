@@ -12,7 +12,7 @@
   </servlet>
   <servlet>
     <servlet-name>UserInfo</servlet-name>
-    <servlet-class>com.servlets.OauthAuthorizationServlet</servlet-class>
+    <servlet-class>com.servlets.OauthFlowServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet>

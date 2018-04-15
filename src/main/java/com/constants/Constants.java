@@ -13,6 +13,7 @@ public enum Constants {
     REDIRECT_URI("redirect_uri"),
     RESPONSE_TYPE("response_type"),
     SCOPE("scope"),
+    SLB_SESSION("slbState"),
     STATE("state"),
     OTHER_PARAMETERS(""),
     OPENID_SCOPE("openid%20profile%20email"),
