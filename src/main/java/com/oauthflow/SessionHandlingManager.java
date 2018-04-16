@@ -16,27 +16,21 @@ import java.util.HashMap;
 public class SessionHandlingManager {
 
     private static final Logger LOGGER = Logger.getLogger(SessionHandlingManager.class);
- //   private static SlbClient slbClient;
+    private static SlbClient slbClient;
 
     public static void persistClientQueryParameters(HttpServletRequest request) throws UnsupportedEncodingException,ServletException, IOException {
 
         // Create slb and httpSession for client
-        // TODO: check if I have session (what I recieve from URL - session & login_hint.Other stuff in is in HttpSession).
 
         HttpSession httpSession = request.getSession();
-        SlbClient slbClient = new SlbClient();
+        slbClient = new SlbClient();
         slbClient.setSlbSession(httpSession.getId());
 
-
-        // TODO: Provider p = ...
         // Decode client provided redirect_uri
         String queryString= URLDecoder.decode(request.getQueryString(), Constants.UTF_8.getKey());
 
         if (queryString != null && !queryString.equals("")){
             try {
-                // TODO : two clients having same state
-                // TODO : client --> stick to hashmap!!!!!!
-                // TODO: login_hint (open ID) && session
                 // persist new client in http session
                 String redirectUri = request.getParameter(Constants.REDIRECT_URI.getKey());
                 Client client = new Client(redirectUri, request.getParameter(Constants.STATE.getKey()));
