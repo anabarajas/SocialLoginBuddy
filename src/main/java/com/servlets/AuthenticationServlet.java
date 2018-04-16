@@ -17,6 +17,7 @@ public class AuthenticationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // remember client parameters in http session
         SessionHandlingManager.persistClientQueryParameters(request);
         OauthFlowServiceManager.performAuthorizationRequest(response);
     }

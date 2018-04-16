@@ -2,18 +2,18 @@ package com.model;
 
 public class Client {
     private String redirectUri = "";
-    private String session = "";
+    private String state = "";
 
-    public Client(String redirectUri, String session) {
+    public Client(String redirectUri, String state) {
         this.redirectUri = redirectUri;
-        this.session = session;
+        this.state = state;
     }
 
     public String getRedirectUri() {
         return redirectUri;
     }
 
-    public String getSession() {
-        return session;
+    public String getState() {
+        return state;
     }
 }

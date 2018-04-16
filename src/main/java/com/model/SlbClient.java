@@ -5,7 +5,6 @@ public class SlbClient {
     private String authorizationCode = "";
     private String accessToken = "";
     private String idToken = "";
-    private String userInfo = "";
 
     public String getSlbSession() {
         return slbSession;
@@ -39,11 +38,4 @@ public class SlbClient {
         this.idToken = idToken;
     }
 
-    public String getUserInfo() {
-        return userInfo;
-    }
-
-    public void setUserInfo(String userInfo) {
-        this.userInfo = userInfo;
-    }
 }

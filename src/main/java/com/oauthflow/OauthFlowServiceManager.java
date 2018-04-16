@@ -1,8 +1,8 @@
 package com.oauthflow;
 
 import com.constants.Constants;
-import com.servlets.OauthFlowServlet;
-import com.utils.Utils;
+import com.model.Client;
+import com.model.SlbClient;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -14,18 +14,21 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class OauthFlowServiceManager {
+    private static SlbClient slbClient;
     private static String CLIENT_ID_HARDCODED = "282485959172-68df31dotcu7lo705k4up9dkd5tfcen4.apps.googleusercontent.com";
     private static String CLIENT_SECRET_HARDCODED = "9vgxMF-GPWvC-bmE0l8ABkz6";
 
@@ -52,8 +55,8 @@ public class OauthFlowServiceManager {
                     .append("=").append(Constants.OPENID_SCOPE.getKey())
                     .append("&").append(Constants.REDIRECT_URI.getKey())
                     .append("=").append(APP_USERINFO_REDIRECTION_URI)
-                    .append("&").append(Constants.SLB_SESSION.getKey())
-                    .append("=").append(SessionHandlingManager.getClientSlbState());
+                    .append("&").append(Constants.STATE.getKey())
+                    .append("=").append(SessionHandlingManager.getSlbClient().getSlbSession());
             LOGGER.info(new StringBuffer("performAuthorizationRequest - Authentication url: ").append(authenticationURL));
             response.sendRedirect(authenticationURL.toString());
         } catch (IOException e) {
@@ -99,24 +102,26 @@ public class OauthFlowServiceManager {
         }
     }
 
-    public static String performOAuthFlow(String authorizationCode) throws IOException {
-        String clientResponseRedirectUri_urlEncoded = "";
+    public static String performOAuthFlow(HttpServletRequest request) throws IOException {
         String userInfoString = "";
         String autoForm = "";
+        slbClient = SessionHandlingManager.getSlbClient();
+        slbClient.setAuthorizationCode(request.getParameter(Constants.CODE.getKey()));
+
         try{
             // Get client tokens
-            String providerResponse = postRequest_clientTokens(authorizationCode);
-            ConcurrentHashMap<Constants, String> clientTokens = Utils.extractResponseClientTokens(providerResponse);
-            if (clientTokens.size() < 2){
-                throw new IllegalArgumentException("performOAuthFlow - Missing fields in provider response");
-            }
+            String providerResponse = postRequest_clientTokens(slbClient.getAuthorizationCode());
+            extractResponseClientTokens(providerResponse);
 
             // Get user info and encode it
-            userInfoString = getUserInfo(clientTokens.get(Constants.ACCESS_TOKEN));
+            userInfoString = getUserInfo(slbClient.getAccessToken());
             String base64EncodedUserInformationJSONstring = new String(Base64.getEncoder().encode(userInfoString.getBytes()));
 
             // Build post for to client
-            autoForm = buildAutoForm(base64EncodedUserInformationJSONstring, clientTokens.get(Constants.ID_TOKEN));
+            HttpSession session = request.getSession(false);
+            LOGGER.info(new StringBuilder("performOAuthFlow - client slb session: ").append(session.getId()));
+            Client client = (Client) session.getAttribute(slbClient.getSlbSession());
+            autoForm = buildAutoForm(base64EncodedUserInformationJSONstring, client);
             LOGGER.info(new StringBuilder("performOAuthFlow - POST form to client: ").append(autoForm));
         } catch (Exception e) {
             LOGGER.warn(new StringBuilder("performOAuthFlow - ").append(e.getLocalizedMessage()));
@@ -126,13 +131,35 @@ public class OauthFlowServiceManager {
         }
     }
 
+    public static void extractResponseClientTokens(String providerResponse){
+        JSONParser parser = new JSONParser();
+        try {
+            JSONObject jsonObject = (JSONObject) parser.parse(providerResponse);
+
+            // Get access_token
+            String accessTokenValue = (String) jsonObject.get(Constants.ACCESS_TOKEN.getKey());
+            slbClient.setAccessToken(accessTokenValue);
+
+            // Get id_token
+            String idTokenValue = (String) jsonObject.get(Constants.ID_TOKEN.getKey());
+            slbClient.setIdToken(idTokenValue);
+            LOGGER.info(new StringBuilder("extractResponseClientTokens - \bid_token in response is: ").append(idTokenValue)
+                    .append("\baccess_token is: ").append(accessTokenValue));
+
+        } catch (Exception e) {
+            LOGGER.error(new StringBuilder("extractResponseClientTokens - JSON object parsing failed").append(e.getStackTrace()));
+        }
+    }
+
     public static String getUserInfo(String accessToken) {
         HttpClient httpClient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(GOOGLE_USER_INFO_ENDPOINT);
         httpGet.setHeader(Constants.AUTHORIZATION.getKey(), Constants.BEARER.getKey() + accessToken);
         try {
+            // Execute get request
             HttpResponse httpResponse = httpClient.execute(httpGet);
             String userInfoString = EntityUtils.toString(httpResponse.getEntity());
+
             LOGGER.info(new StringBuilder("getUserInfo - provider response:").append(userInfoString));
             return userInfoString;
         } catch (IOException e) {
@@ -141,7 +168,7 @@ public class OauthFlowServiceManager {
         }
     }
 
-    public static String buildAutoForm(String base64EncodedUserInfoResponse, String idToken) {
+    public static String buildAutoForm(String base64EncodedUserInfoResponse, Client client) {
         return new StringBuilder(
                 "<html>\n" +
                         "<HEAD>\n" +
@@ -151,10 +178,10 @@ public class OauthFlowServiceManager {
                         "</HEAD>\n" +
                         "<body onLoad=\"document.forms[0].submit()\">\n" +
                         "<NOSCRIPT>Your browser does not support JavaScript.  Please click the 'Continue' button below to proceed. <br><br></NOSCRIPT>\n" +
-                        "<form action=\"").append(SessionHandlingManager.getClientRedirectUri()).append("\" method=\"POST\">\n" +
+                        "<form action=\"").append(client.getRedirectUri()).append("\" method=\"POST\">\n" +
                 "<input type=\"hidden\" name=\"userinforesponse\" value=\"").append(base64EncodedUserInfoResponse).append("\">\n" +
-                "<input type=\"hidden\" name=\"id_token\" value=\"").append(idToken).append("\">\n" +
-                "<input type=\"hidden\" name=\"state\" value=\"").append(SessionHandlingManager.getClientState()).append("\">\n" +
+                "<input type=\"hidden\" name=\"id_token\" value=\"").append(SessionHandlingManager.getSlbClient().getIdToken()).append("\">\n" +
+                "<input type=\"hidden\" name=\"state\" value=\"").append(client.getState()).append("\">\n" +
                 "<NOSCRIPT>\n" +
                 "  <INPUT TYPE=\"SUBMIT\" VALUE=\"Continue\">\n" +
                 "</NOSCRIPT>\n" +

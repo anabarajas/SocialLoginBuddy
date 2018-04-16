@@ -1,8 +1,5 @@
 package com.servlets;
 
-import com.constants.Constants;
-import com.oauthflow.SessionHandlingManager;
-import com.utils.Utils;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
@@ -11,9 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
