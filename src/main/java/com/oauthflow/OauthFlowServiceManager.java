@@ -109,7 +109,7 @@ public class OauthFlowServiceManager {
         slbClient.setAuthorizationCode(request.getParameter(Constants.CODE.getKey()));
 
         try{
-            // Get client tokens
+            // Get client tokens TODO: better names
             String providerResponse = postRequest_clientTokens(slbClient.getAuthorizationCode());
             extractResponseClientTokens(providerResponse);
 
